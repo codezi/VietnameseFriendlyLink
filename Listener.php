@@ -14,7 +14,7 @@ class Listener
      * @see utf8_deaccent
      * @see utf8_romanize
      */
-    public static function appSetup($app)
+    public static function appSetup(App $app): void
     {
         if (!self::$doneIt) {
             self::doIt();
@@ -28,7 +28,7 @@ class Listener
      * @return void
      * @see \XF\Mvc\Router::prepareStringForUrl()
      */
-    public static function routerPublicSetup($container, &$router)
+    public static function routerPublicSetup(Container $container, Router &$router): void
     {
         $router->setRomanizeUrls(true);
     }
@@ -36,14 +36,25 @@ class Listener
     /**
      * @var bool
      */
-    private static $doneIt = false;
+    private static bool $doneIt = false;
 
     /**
      * @return void
      */
-    private static function doIt()
+    private static function doIt(): void
     {
         global $UTF8_LOWER_ACCENTS, $UTF8_UPPER_ACCENTS, $UTF8_ROMANIZATION;
+
+        // Ensure the globals are arrays
+        if (!is_array($UTF8_LOWER_ACCENTS)) {
+            $UTF8_LOWER_ACCENTS = [];
+        }
+        if (!is_array($UTF8_UPPER_ACCENTS)) {
+            $UTF8_UPPER_ACCENTS = [];
+        }
+        if (!is_array($UTF8_ROMANIZATION)) {
+            $UTF8_ROMANIZATION = [];
+        }
 
         $UTF8_LOWER_ACCENTS += [
             'à' => 'a',
